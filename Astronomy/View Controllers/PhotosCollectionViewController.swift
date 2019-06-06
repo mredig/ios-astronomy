@@ -10,6 +10,8 @@ import UIKit
 
 class PhotosCollectionViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
 
+	let networkHandler = NetworkHandler()
+
 	override func viewDidLoad() {
 		super.viewDidLoad()
 
@@ -34,9 +36,10 @@ class PhotosCollectionViewController: UIViewController, UICollectionViewDataSour
 	}
 
 	func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-		let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ImageCell", for: indexPath) as? ImageCollectionViewCell ?? ImageCollectionViewCell()
+		let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ImageCell", for: indexPath)
+		guard let imageCell = cell as? ImageCollectionViewCell else { return cell }
 
-		loadImage(forCell: cell, forItemAt: indexPath)
+		loadImage(forCell: imageCell, forItemAt: indexPath)
 
 		return cell
 	}
@@ -65,6 +68,39 @@ class PhotosCollectionViewController: UIViewController, UICollectionViewDataSour
 	private func loadImage(forCell cell: ImageCollectionViewCell, forItemAt indexPath: IndexPath) {
 
 		let photoReference = photoReferences[indexPath.item]
+		guard let photoURL = photoReference.imageURL.usingHTTPS else { return }
+
+		if cell == cell { print("yippee") }
+
+		networkHandler.transferMahDatas(with: photoURL.request) { [weak self] (result: Result<Data, NetworkError>) in
+			DispatchQueue.main.async {
+				do {
+					let imageData = try result.get()
+					guard let image = UIImage(data: imageData) else { throw NetworkError.imageDecodeError }
+
+					// broken idea 1
+//					guard let cellCheck = self?.collectionView.cellForItem(at: indexPath) else {
+//						print("no cell at \(indexPath)")
+//						return
+//					}
+//					guard cellCheck == cell else { return }
+
+					// broken idea 2
+					guard let cellPath = self?.collectionView.indexPath(for: cell) else {
+						print("cell has no path...")
+						return
+					}
+					print("cellPath: \(cellPath) indexPathFromRequest: \(indexPath)")
+
+					if cellPath == indexPath {
+						cell.imageView.image = image
+					}
+				} catch {
+					let alert = UIAlertController(error: error)
+					self?.present(alert, animated: true)
+				}
+			}
+		}
 
 		// TODO: Implement image loading here
 	}
@@ -75,7 +111,7 @@ class PhotosCollectionViewController: UIViewController, UICollectionViewDataSour
 
 	private var roverInfo: MarsRover? {
 		didSet {
-			solDescription = roverInfo?.solDescriptions[3]
+			solDescription = roverInfo?.solDescriptions[105]
 		}
 	}
 	private var solDescription: SolDescription? {
