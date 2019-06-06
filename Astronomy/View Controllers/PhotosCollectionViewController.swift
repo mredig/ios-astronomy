@@ -11,6 +11,7 @@ import UIKit
 class PhotosCollectionViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
 
 	let networkHandler = NetworkHandler()
+	let cache = Cache<Int, UIImage>()
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -70,13 +71,17 @@ class PhotosCollectionViewController: UIViewController, UICollectionViewDataSour
 		let photoReference = photoReferences[indexPath.item]
 		guard let photoURL = photoReference.imageURL.usingHTTPS else { return }
 
-		if cell == cell { print("yippee") }
+		if let image = cache.value(for: photoReference.id) {
+			cell.imageView.image = image
+			return
+		}
 
 		networkHandler.transferMahDatas(with: photoURL.request) { [weak self] (result: Result<Data, NetworkError>) in
 			DispatchQueue.main.async {
 				do {
 					let imageData = try result.get()
 					guard let image = UIImage(data: imageData) else { throw NetworkError.imageDecodeError }
+					self?.cache.cache(value: image, for: photoReference.id)
 
 					// broken idea 1
 //					guard let cellCheck = self?.collectionView.cellForItem(at: indexPath) else {
