@@ -13,13 +13,17 @@ class Cache <Key: Hashable, Value> {
 
 	private let cacheQueue = DispatchQueue(label: "com.michael-lambda.cache")
 
-	func cache(value: Value, for key: Key) {
+	func cache(value: Value, forKey key: Key) {
 		cacheQueue.sync {
 			contents[key] = value
 		}
 	}
 
-	func value(for key: Key) -> Value? {
+	func value(forKey key: Key) -> Value? {
 		return cacheQueue.sync { contents[key] }
+	}
+
+	@discardableResult func removeValue(forKey key: Key) -> Value? {
+		return cacheQueue.sync { contents.removeValue(forKey: key) }
 	}
 }

@@ -27,13 +27,12 @@ class PhotoFetchOperation: ConcurrentOperation {
 			guard let self = self else { return }
 			defer {
 				self.state = .isFinished
-				self.currentTask = nil
 			}
 			do {
 				let imageData = try result.get()
 				self.imageData = imageData
 			} catch {
-				NSLog("There was an error loading an image: \(error)")
+				NSLog("There was an error loading the image: \(error)")
 			}
 		})
 	}
