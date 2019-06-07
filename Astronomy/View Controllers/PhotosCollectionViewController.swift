@@ -13,6 +13,8 @@ class PhotosCollectionViewController: UIViewController, UICollectionViewDataSour
 	let networkHandler = NetworkHandler()
 	let cache = Cache<Int, UIImage>()
 
+	let photoFetchQueue = OperationQueue()
+
 	override func viewDidLoad() {
 		super.viewDidLoad()
 
@@ -69,45 +71,34 @@ class PhotosCollectionViewController: UIViewController, UICollectionViewDataSour
 	private func loadImage(forCell cell: ImageCollectionViewCell, forItemAt indexPath: IndexPath) {
 
 		let photoReference = photoReferences[indexPath.item]
-		guard let photoURL = photoReference.imageURL.usingHTTPS else { return }
 
 		if let image = cache.value(for: photoReference.id) {
 			cell.imageView.image = image
 			return
 		}
 
-		networkHandler.transferMahDatas(with: photoURL.request) { [weak self] (result: Result<Data, NetworkError>) in
+		let photoFetchOp = PhotoFetchOperation(reference: photoReference)
+		let cacheOp = BlockOperation { [weak self] in
+			guard let imageData = photoFetchOp.imageData else { return }
+			guard let image = UIImage(data: imageData) else { return }
+			self?.cache.cache(value: image, for: photoReference.id)
+		}
+		let setOp = BlockOperation { [weak self] in
+			guard let imageData = photoFetchOp.imageData else { return }
+			guard let image = UIImage(data: imageData) else { return }
 			DispatchQueue.main.async {
-				do {
-					let imageData = try result.get()
-					guard let image = UIImage(data: imageData) else { throw NetworkError.imageDecodeError }
-					self?.cache.cache(value: image, for: photoReference.id)
-
-					// broken idea 1
-//					guard let cellCheck = self?.collectionView.cellForItem(at: indexPath) else {
-//						print("no cell at \(indexPath)")
-//						return
-//					}
-//					guard cellCheck == cell else { return }
-
-					// broken idea 2
-					guard let cellPath = self?.collectionView.indexPath(for: cell) else {
-						print("cell has no path...")
-						return
-					}
-					print("cellPath: \(cellPath) indexPathFromRequest: \(indexPath)")
-
-					if cellPath == indexPath {
-						cell.imageView.image = image
-					}
-				} catch {
-					let alert = UIAlertController(error: error)
-					self?.present(alert, animated: true)
+				guard let cellPath = self?.collectionView.indexPath(for: cell), cellPath == indexPath else {
+					print("cell has no path...")
+					return
 				}
+				cell.imageView.image = image
 			}
 		}
+		cacheOp.addDependency(photoFetchOp)
+		setOp.addDependency(photoFetchOp)
 
-		// TODO: Implement image loading here
+		photoFetchQueue.addOperations([photoFetchOp, cacheOp, setOp], waitUntilFinished: false)
+
 	}
 
 	// Properties

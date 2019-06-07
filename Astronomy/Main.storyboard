@@ -21,8 +21,8 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <collectionView multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="x4T-SY-qY3">
-                                <rect key="frame" x="0.0" y="0.0" width="414" height="862"/>
+                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="x4T-SY-qY3">
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="b06-CH-qi5">
                                     <size key="itemSize" width="150" height="150"/>
@@ -63,7 +63,7 @@
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="x4T-SY-qY3" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="Bwf-JT-RXO"/>
-                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="x4T-SY-qY3" secondAttribute="bottom" id="JUK-BJ-yT3"/>
+                            <constraint firstAttribute="bottom" secondItem="x4T-SY-qY3" secondAttribute="bottom" id="JUK-BJ-yT3"/>
                             <constraint firstItem="x4T-SY-qY3" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="TLV-Vs-e2N"/>
                             <constraint firstAttribute="trailing" secondItem="x4T-SY-qY3" secondAttribute="trailing" id="zbI-ym-VfE"/>
                         </constraints>
