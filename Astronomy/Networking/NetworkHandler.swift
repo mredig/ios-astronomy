@@ -73,6 +73,8 @@ class NetworkHandler {
 		return JSONDecoder()
 	}()
 
+	static let `default` = NetworkHandler()
+
 	/// Preconfigured URLSession tasking to fetch, decode, and provide decodable json data.
 	@discardableResult func transferMahCodableDatas<T: Decodable>(with request: URLRequest, session: URLSession = URLSession.shared, completion: @escaping (Result<T, NetworkError>) -> Void) -> URLSessionDataTask {
 

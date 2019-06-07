@@ -10,6 +10,7 @@
 		33D840A622A9B998008B7069 /* UIAlertController+NetError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33D840A422A9B998008B7069 /* UIAlertController+NetError.swift */; };
 		33D840A722A9B998008B7069 /* NetworkHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33D840A522A9B998008B7069 /* NetworkHandler.swift */; };
 		33D840A922A9D580008B7069 /* Cache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33D840A822A9D580008B7069 /* Cache.swift */; };
+		33D840AB22A9DC88008B7069 /* PhotoFetchOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33D840AA22A9DC88008B7069 /* PhotoFetchOperation.swift */; };
 		9DBD20092140D1300047905E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DBD20082140D1300047905E /* AppDelegate.swift */; };
 		9DBD20102140D1300047905E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9DBD200F2140D1300047905E /* Assets.xcassets */; };
 		9DBD20132140D1300047905E /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9DBD20112140D1300047905E /* LaunchScreen.storyboard */; };
@@ -29,6 +30,7 @@
 		33D840A422A9B998008B7069 /* UIAlertController+NetError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIAlertController+NetError.swift"; sourceTree = "<group>"; };
 		33D840A522A9B998008B7069 /* NetworkHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkHandler.swift; sourceTree = "<group>"; };
 		33D840A822A9D580008B7069 /* Cache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cache.swift; sourceTree = "<group>"; };
+		33D840AA22A9DC88008B7069 /* PhotoFetchOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoFetchOperation.swift; sourceTree = "<group>"; };
 		9DBD20052140D1300047905E /* Astronomy.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Astronomy.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9DBD20082140D1300047905E /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		9DBD200F2140D1300047905E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -141,6 +143,7 @@
 			isa = PBXGroup;
 			children = (
 				9DBD20362140E46E0047905E /* ConcurrentOperation.swift */,
+				33D840AA22A9DC88008B7069 /* PhotoFetchOperation.swift */,
 			);
 			path = Operations;
 			sourceTree = "<group>";
@@ -225,6 +228,7 @@
 				33D840A922A9D580008B7069 /* Cache.swift in Sources */,
 				9DBD202A2140D35B0047905E /* MarsRoverClient.swift in Sources */,
 				9DBD20232140D30F0047905E /* SolDescription.swift in Sources */,
+				33D840AB22A9DC88008B7069 /* PhotoFetchOperation.swift in Sources */,
 				9DBD20092140D1300047905E /* AppDelegate.swift in Sources */,
 				9DBD20242140D30F0047905E /* MarsPhotoReference.swift in Sources */,
 				9DBD202F2140D7720047905E /* Camera.swift in Sources */,
