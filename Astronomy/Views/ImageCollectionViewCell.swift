@@ -10,6 +10,8 @@ import UIKit
 
 class ImageCollectionViewCell: UICollectionViewCell {
 
+	@IBOutlet var indicatorView: UIView!
+	
 	var cache: Cache<Int, UIImage>?
 	var reference: MarsPhotoReference? {
 		didSet {
@@ -22,6 +24,21 @@ class ImageCollectionViewCell: UICollectionViewCell {
 		q.name = UUID().uuidString
 		return q
 	}()
+
+	override func awakeFromNib() {
+		indicatorView.layer.cornerRadius = 4
+//		_ = Timer.scheduledTimer(withTimeInterval: 0.25, repeats: true, block: { _ in
+//			self.statusCheck()
+//		})
+	}
+
+	private func statusCheck() {
+		if imageLoadOperation != nil, imageLoadOperation?.isCancelled == false {
+			self.indicatorView.backgroundColor = .red
+		} else {
+			self.indicatorView.backgroundColor = .green
+		}
+	}
     
     override func prepareForReuse() {
         imageView.image = #imageLiteral(resourceName: "MarsPlaceholder")
@@ -31,6 +48,7 @@ class ImageCollectionViewCell: UICollectionViewCell {
 	func updateViews() {
 		guard let reference = reference else { return }
 		imageLoadOperation?.cancel()
+		imageLoadOperation = nil
 		if let image = cache?.value(forKey: reference.id) {
 			imageView.image = image
 			return
@@ -45,7 +63,10 @@ class ImageCollectionViewCell: UICollectionViewCell {
 		imageLoadOperation = BlockOperation()
 		guard let imageLoadOperation = imageLoadOperation else { return }
 		imageLoadOperation.addExecutionBlock { [weak self] in
-			defer { self?.imageLoadOperation = nil}
+			defer {
+				self?.imageLoadOperation = nil
+				self?.statusCheck()
+			}
 
 			guard let imageData = photoFetchOp.imageData, self?.imageLoadOperation?.isCancelled == false else { return }
 			self?.imageView.image = UIImage(data: imageData)
@@ -56,6 +77,7 @@ class ImageCollectionViewCell: UICollectionViewCell {
 
 		cellQueue.addOperations([photoFetchOp, cacheOp], waitUntilFinished: false)
 		OperationQueue.main.addOperation(imageLoadOperation)
+		statusCheck()
 
 	}
 
